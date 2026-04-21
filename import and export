@@ -1,0 +1,43 @@
+import pandas as pd
+
+# ===============================
+# 1. IMPORT DATA (READ FILE)
+# ===============================
+
+# 🔁 Change file name as needed
+df = pd.read_csv("input_data.csv")
+
+print("Data Imported Successfully!\n")
+print(df.head())
+
+
+# ===============================
+# 2. BASIC OPERATIONS (OPTIONAL)
+# ===============================
+
+# Example: add a new column
+df['New_Column'] = 100
+
+# Example: filter data
+filtered_df = df[df.iloc[:, 0] > 0]   # change condition if needed
+
+
+# ===============================
+# 3. EXPORT DATA (WRITE FILE)
+# ===============================
+
+# Export full dataset
+df.to_csv("output_data.csv", index=False)
+
+# Export filtered dataset
+filtered_df.to_csv("filtered_data.csv", index=False)
+
+print("\nData Exported Successfully!")
+
+df = pd.read_excel("input.xlsx")
+df.to_excel("output.xlsx", index=False)
+df = pd.read_json("data.json")
+df.to_json("output.json")df = pd.read_excel("input.xlsx")
+df.to_excel("output.xlsx", index=False)
+df = pd.read_json("data.json")
+df.to_json("output.json")
