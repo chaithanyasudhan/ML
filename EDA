@@ -1,0 +1,63 @@
+import pandas as pd
+import numpy as np
+
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.model_selection import train_test_split
+
+# ===============================
+# 1. LOAD DATASET
+# ===============================
+df = pd.read_csv("your_dataset.csv")   # 🔁 change file
+
+print("Original Data:\n", df.head())
+
+# ===============================
+# 2. HANDLE MISSING VALUES
+# ===============================
+# Fill numeric columns with mean
+df.fillna(df.mean(numeric_only=True), inplace=True)
+
+# Fill categorical columns with mode
+for col in df.select_dtypes(include='object'):
+    df[col].fillna(df[col].mode()[0], inplace=True)
+
+print("\nAfter Handling Missing Values:\n", df.head())
+
+# ===============================
+# 3. ENCODE CATEGORICAL DATA
+# ===============================
+le = LabelEncoder()
+
+for col in df.select_dtypes(include='object'):
+    df[col] = le.fit_transform(df[col])
+
+print("\nAfter Encoding:\n", df.head())
+
+# ===============================
+# 4. FEATURE SCALING
+# ===============================
+scaler = StandardScaler()
+
+numeric_cols = df.select_dtypes(include=np.number).columns
+df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+
+print("\nAfter Scaling:\n", df.head())
+
+# ===============================
+# 5. FEATURE & TARGET SPLIT
+# ===============================
+target_col = df.columns[-1]   # 🔁 change if needed
+
+X = df.drop(target_col, axis=1)
+y = df[target_col]
+
+# ===============================
+# 6. TRAIN TEST SPLIT
+# ===============================
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print("\nTrain-Test Split Done!")
+print("X_train shape:", X_train.shape)
+print("X_test shape:", X_test.shape)
