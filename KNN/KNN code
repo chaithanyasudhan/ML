@@ -1,0 +1,80 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+
+# ===============================
+# 1. LOAD DATASET
+# ===============================
+file_path = "your_dataset.csv"   # 🔁 change
+target_col = "target"            # 🔁 change
+
+df = pd.read_csv(file_path)
+
+print("Columns:", df.columns)
+print(df.head())
+
+# ===============================
+# 2. PREPROCESSING
+# ===============================
+# Convert categorical → numeric
+df = pd.get_dummies(df, drop_first=True)
+
+# Features & target
+X = df.drop(target_col, axis=1)
+y = df[target_col]
+
+# ===============================
+# 3. TRAIN TEST SPLIT
+# ===============================
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# ===============================
+# 4. FEATURE SCALING (IMPORTANT FOR KNN)
+# ===============================
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# ===============================
+# 5. KNN MODEL
+# ===============================
+model = KNeighborsClassifier(n_neighbors=5)
+model.fit(X_train, y_train)
+
+# ===============================
+# 6. PREDICTION
+# ===============================
+y_pred = model.predict(X_test)
+
+# ===============================
+# 7. METRICS
+# ===============================
+print("\n--- KNN Evaluation ---")
+
+print("Accuracy :", accuracy_score(y_test, y_pred))
+print("Precision:", precision_score(y_test, y_pred, average='weighted'))
+print("Recall   :", recall_score(y_test, y_pred, average='weighted'))
+print("F1 Score :", f1_score(y_test, y_pred, average='weighted'))
+
+# ===============================
+# 8. CONFUSION MATRIX
+# ===============================
+cm = confusion_matrix(y_test, y_pred)
+
+print("\nConfusion Matrix:\n", cm)
+
+# Plot
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt='d')
+
+plt.title("Confusion Matrix - KNN")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
