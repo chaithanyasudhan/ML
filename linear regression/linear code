@@ -32,7 +32,7 @@ print(df.head())
 df = pd.get_dummies(df, drop_first=True)
 
 # Split features & target
-X = df.drop(target_col, axis=1)
+X = df[['other_feature ']]   # 🔁 change
 y = df[target_col]
 
 # ===============================
